@@ -1,7 +1,7 @@
 # Typescript
 [参考](https://www.youtube.com/watch?v=F9vzRz6jyRk&t=28s)
 
-# Typescript 型の種類
+# Typescript 型についてのメモ
 ## boolean
 tscがどうやってbooleanを認識しているか？
 →変数をマウスホバーすることで型情報が確認可能
@@ -107,6 +107,22 @@ var CoffeSize;
 何でも入れることができる型
 素のjavascriptと同じ動きになる
 ※なるべく使わないようにする
+
+---
+
+## unknown
+anyと似ているが、anyより微妙に厳しくなっている
+```typescript
+let unknownInput: unknown = 20;
+let anyInput: input = "hello";
+let text: string;
+text = anyInput;     // OK
+text = unknownInput; // NG
+// unknownを使用する際
+if(typeof(unknownInput) === 'string') {
+  text = unknownInput;
+}
+```
 
 ---
 ## union
@@ -215,5 +231,18 @@ doubleAndHandle(21, doubleNum => {
 
 // コールバック関数の戻り値宣言にvoid,nullを設定すると
 // その定義した関数は機能しなくなる
+```
+
+## never型
+戻り値が無い関数につける型<br>
+ver3〜登場している。<br>
+neverを明示的に付与しない場合の型推論は「: void」
+```typescript
+// never 
+function error(message: string): never {
+  throw new Error(message);     
+}
+
+console.log(error('this is an error'));
 ```
 

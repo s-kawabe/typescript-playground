@@ -43,8 +43,15 @@ const coffe = {
 
 function doubleAndHandle(num: number, cb: (num: number) => number) {
   const doubleNum = cb(num * 2);
-  console.log(doubleNum);  
+  // console.log(doubleNum);  
 }
 doubleAndHandle(21, doubleNum => {
   return doubleNum;
 });
+
+// never 
+function error(message: string): never {
+  throw new Error(message);     
+}
+
+console.log(error('this is an error'));
