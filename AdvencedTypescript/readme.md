@@ -42,6 +42,12 @@ function toUpperCase(x: string | number) {
 }
 ```
 
+- 便利なtypeof使用法
+```typescript
+// Peterオブジェクト(or クラス)の型情報を変数に格納する
+type PeterType = typeof Peter;
+```
+
 ### in
 特定のメンバーがクラスに属しているか調べる
 ```typescript
@@ -109,7 +115,7 @@ input.value = 'Hello Initial Content'
 ```
 ---
 
-## ! (Non-null assertion operator)
+## Non-null assertion operator
 nullを返す可能性のあるものの末尾につけて、nullを拒否する
 ```typescript
 document.getElementById('input')!
@@ -151,3 +157,85 @@ function checkType(type: string | number) {
 const refStr = checkType('hello');
 const refNum = checkType(30);
 ```
+---
+
+## Optional Cheining
+Optional propertyの応用
+プロパティがあったら返す、なくてもundifinedを返す
+```typescript
+interface DownloadedData {
+  id: number;
+  // Optional property
+  user?: {
+    name?: {
+      first: string;
+      last: string;
+    }
+  };
+}
+
+const downloadedData: DownloadedData = {
+  id: 1
+}
+
+// Optional chaining  
+console.log(downloadedData.user?.name); // => undifined
+```
+---
+
+## Nullish Coalescing
+undefinedを検査する
+```typescript
+// downloadedData.userがundifinedだった場合のみ 'no-user' を返す
+// (or演算子 || は前者がfalthyなら全て評価しないので異なる)
+const userData = downloadedData.user ?? 'no-user';
+```
+---
+
+## LookUp型
+interfaceのプロパティ名を指定して、型情報を取得する
+```typescript
+interface DownlodedData {
+  id: number;
+  name: string;
+  age: number;
+}
+
+type id = DownloadedData['id']
+// id => number
+```
+---
+
+## REST ParameterにTupleを使用する
+```typescript
+function advancedFnc(...args: [number, string, boolean, ...number[]]) {
+
+}
+
+advancedFnc(0,'hoge',true,3,5,6,7)
+```
+---
+
+## constアサーション
+型注釈無しで型に対して具体的なカプセル化を施せるキーワード
+```typescript
+const milk = 'milk' as const;
+let drink = milk;
+const array = [10,20] as const;
+
+const peter = {
+  name: 'Peter',
+  age: 38
+} as const;
+// 以下と同義
+// const peter: {
+//   readonly name: 'Peter';
+//   readonly age: 38;
+// } = {
+//   name: 'Peter',
+//   age: 38
+// };
+```
+---
+
+
