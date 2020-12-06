@@ -4,7 +4,7 @@
 ※使用するにはtsconfig.jsonのexperimentalDecoratorをtrueに
 
 ---
-## 基本的な使い方(Classに関数を適用する)
+## 基本的な使い方(Classに関数を適用する) クラスデコレータ
 decoratorはclassのインスタンス生成時ではなく<br>
 <strong>classの定義時</strong>に実行される！
 
@@ -83,13 +83,84 @@ class HogeUser {
 ---
 
 ## デコレータの戻り値にクラスを指定して、新しいクラスを作り出す
+デコレータの対象となるfunctionのでコレータファクトリ内に再びreturnを記述することで
+様々なクラスからの参照に対応できる
 ```typescript
-
+function Component(template: string, selector: string) {
+  return function<T extends { new(...args: any[]): { name: string } }>(constructor: T) {
+    // クラスの定義時ではなくインスタンスの生成時に実行されるデコレータ
+    return class extends constructor{
+      constructor(...args: any[]) {
+        super(...args);
+        console.log('Component');
+        const mountedElement = document.querySelector(selector);
+        const instance = new constructor('huga', 'hoga');
+        if(mountedElement) {
+        mountedElement.innerHTML = template;
+        mountedElement.querySelector('h1')!.textContent = instance.name;
+        }
+      }
+    }
+  }
+}
 ```
 ---
 
-##
+## プロパティデコレータ
+クラス内のプロパティに対して適用する<br>
 ```typescript
+// プロパティデコレータ
+// prop=>(taeget:呼び出し元のクラスのプロトタイプ propertyKey:対象のプロパティの型)
+// クラスデコレータより先に実行される！
+function PropertyLogging(target: any, propertyKey: string) {
+  console.log('propertyLogging!');
+  console.log(target);
+  console.log(propertyKey);
+}
+
+// プロパティがstaticの場合のtarget→クラス(コンストラクタ関数)
+// staticでない場合のtarget→プロトタイプ
+```
+---
+
+## メソッドデコレータ
+```typescript
+// メソッドデコレータ prop=>(taeget:呼び出し元のクラスのプロトタイプ
+//                        propertyKey:対象のプロパティの型
+//                        descriptor: ディスクリプタ(オブジェクト))
+function MethodLogging(target: any, propertyKey: string, descriptor: PropertyDecorator) {
+  console.log('MethodLogging!');
+  console.log(target);
+  console.log(propertyKey);
+}
+
+// プロパティディスクリプタ
+// writable: 書き込み可能か
+// configurable: ループ時に列挙されるか
+// enumerable: 他のディスクリプタの状態を変更可能か
+```
+---
+
+## 実践的メソッドデコレータ
+メソッドデコレータを定義したメソッドに対して、returnをして
+呼び出し元のメソッドを違うものに変更することができる
+```typescript
+// デコレータの指定方法によってディスクリプタを書き換える
+function enumarable(isEnumerable: boolean) {
+  return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    return {
+      enumerable: isEnumerable
+    }
+  }
+}
+
+class User {
+  @enumarable(false)
+  @MethodLogging
+  greeting() {
+    console.log('Hello!');
+  }
+}
 ```
 ---
 
