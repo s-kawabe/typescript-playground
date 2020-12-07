@@ -163,13 +163,3 @@ class User {
 }
 ```
 ---
-
-##
-```typescript
-```
----
-
-##
-```typescript
-```
----
