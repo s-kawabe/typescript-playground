@@ -1,28 +1,5 @@
-"use strict";
-class Score {
-    get totalScore() {
-        const foods = Foods.getInstance();
-        return foods.activeElementsScore.reduce((total, score) => total + score, 0);
-    }
-    render() {
-        document.querySelector('.score__number').textContent = String(this.totalScore);
-    }
-}
-class Food {
-    // Foodsから受け取ったElement全てにClickイベントリスナの登録
-    constructor(element) {
-        this.element = element;
-        // コールバック関数でthisを使用する場合はbindを使用する
-        element.addEventListener('click', this.clickEventHandler.bind(this));
-    }
-    clickEventHandler() {
-        // elementにfood-activeクラスがあったらとる、なかったらつける
-        this.element.classList.toggle('food--active');
-        const score = new Score();
-        score.render();
-    }
-}
-class Foods {
+import { Food } from "./food.js";
+export class Foods {
     // constructorを隠蔽し、外部からはFoods.getInstanceを呼び出す
     constructor() {
         // div要素であることをTSに伝える(querySelectorAllはジェネリクス)
@@ -61,4 +38,3 @@ class Foods {
         return Foods.instance;
     }
 }
-const foods = Foods.getInstance();

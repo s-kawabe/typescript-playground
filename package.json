@@ -1,0 +1,29 @@
+{
+  "name": "Typescript-tutorial",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "prettier": "^2.1.1"
+  },
+  "devDependencies": {
+    "webpack": "^5.10.0",
+    "webpack-cli": "^4.2.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack" 
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s-kawabe/typescript-tutorial.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/s-kawabe/typescript-tutorial/issues"
+  },
+  "homepage": "https://github.com/s-kawabe/typescript-tutorial#readme"
+}
