@@ -1,5 +1,5 @@
-import { Foodable } from "./interfaces.js";
-import { Score } from "./score.js";
+import { Foodable } from "./interfaces";
+import { Score } from "./score";
 
 export class Food implements Foodable { 
   // Foodsから受け取ったElement全てにClickイベントリスナの登録

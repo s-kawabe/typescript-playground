@@ -12,7 +12,7 @@ console.log(path.resolve(__dirname, 'HealthManagementApp', 'dist'))
 // Node.jsのexport(commonjs)
 module.exports = {
   // webpackのエントリポイント
-  entry: './HealthManagementApp/dist/main.js',
+  entry: './HealthManagementApp/src/food-app/main.ts',
   // まとめたファイルの出力情報 
   output: {
     // まとめたファイル名
@@ -23,5 +23,18 @@ module.exports = {
     path: path.resolve(__dirname, 'HealthManagementApp', 'dist')
   },
   // sourceMap(他のファイルをブラウザにあげる)を使う
-  devtool: 'inline-source-map'
+  devtool: 'inline-source-map',
+  module: {
+    rules: [{
+      test: /\.ts$/,
+      use: 'ts-loader',
+      // babelルール(ES6→ES5コンパイル)などではよく使う
+      exclude: /node_modules/
+    }]
+  },
+  // importのファイル拡張子がついてなかった場合の名前解決
+  resolve: {
+    extensions: ['.ts','.ts'],
+    modules: ["node_modules"],
+  }
 }

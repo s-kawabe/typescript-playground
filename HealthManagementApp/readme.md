@@ -1,5 +1,13 @@
 # Webpackについていろいろ
 
+```
+★☆★ npm install の --saveについて
+npm install時にpackage.jsonのdependenciesに追加してくれる。
+--save-devはdevDependenciesにいく。
+(npm 5.0移行から記述しなくても標準でやってくれるようになった)
+```
+
+
 ## Webpackの利点
 - モダンでないブラウザでもモジュールを使用できる
 - ファイルが分散していた場合もHTTP通信を一括で行うことができる
@@ -61,4 +69,55 @@ webpack.config.jsに以下を追記
 devtool: 'inline-source-map'
 ```
 
-## 
+## ts-loader
+TSファイルをWebpackが解析し、直接バンドルを生成する
+ts-loaderはtsc同様にtypescriptの型チェックなども担ってくれる
+※ 一部tsconfig.jsonの設定を引き継ぐ
+```
+// グローバルインストールしていたtypescriptも一緒にインストール
+npm install --save-dev ts-loader typescript 
+```
+module.exports内に記載
+```javascript
+module: {
+    rules: [{
+      test: /\.ts$/,
+      use: 'ts-loader',
+      exclude: /node_modules/
+    }]
+  }
+```
+
+tsファイルのimport拡張子はつけない
+``` typescript
+import { Scoreable } from "./interfaces";
+import { Foods } from "./foods";
+```
+
+**importファイルの拡張子が記述されていない場合に.tsを付与する設定**<br>
+module.exports内に記載
+```javascript
+// importのファイル拡張子がついてなかった場合の名前解決
+resolve: {
+  extensions: ['.ts','.ts']
+}
+```
+
+## webpack-dev-server
+tscのwatchモードのような機能<br>
+ファイルプロトコルでなくHTTP通信となる<br>
+HMRの機能あり(ソースを保存→コンパイル→自動でブラウザに反映！)
+
+webpack-dev-server実行時、ts→jsへのコンパイルはあくまで
+内部的な処理になるため、ファイルを可視化することはできない
+「ローカルサーバ/bundle.js(仮)」というエンドポイントにアクセスした
+場合のみ、そのコンパイル結果ファイルを返すという形になる
+(npm run webpack)
+
+2020.10.10よりwebpack ver5となり
+```
+webpack-dev-server → webpack serve
+```
+ になった。しかしwebpack-dev-serverもインストールしておく必要がある
+
+ 設定ファイルを環境ごとに変えて --config オプションで切り替えることができる
