@@ -7,7 +7,6 @@ npm install時にpackage.jsonのdependenciesに追加してくれる。
 (npm 5.0移行から記述しなくても標準でやってくれるようになった)
 ```
 
-
 ## Webpackの利点
 - モダンでないブラウザでもモジュールを使用できる
 - ファイルが分散していた場合もHTTP通信を一括で行うことができる
@@ -18,11 +17,11 @@ npm install時にpackage.jsonのdependenciesに追加してくれる。
 
 ## つかいかた
 1. npm  init -y<br>
-tsconfig.jsonを作成
+package.jsonを作成
 
 2. npm install --save-dev webpack webpack-cli<br>
 インストール<br>
-tsconfig.jsonに以下記述するといいかも
+package.jsonに以下記述するといいかも
 ```javascript
 "scripts" {
   "build": "webpack"
