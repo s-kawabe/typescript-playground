@@ -11,6 +11,8 @@ console.log(path.resolve(__dirname, 'HealthManagementApp', 'dist'))
 
 // Node.jsのexport(commonjs)
 module.exports = {
+  // initial: production
+  mode: 'development',
   // webpackのエントリポイント
   entry: './HealthManagementApp/src/food-app/main.ts',
   // まとめたファイルの出力情報 

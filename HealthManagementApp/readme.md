@@ -120,3 +120,13 @@ webpack-dev-server → webpack serve
  になった。しかしwebpack-dev-serverもインストールしておく必要がある
 
  設定ファイルを環境ごとに変えて --config オプションで切り替えることができる
+
+ ## webpackの設定ファイルの対象を状況に応じて変える
+ --config wenpack.○○.json とすると対象の設定ファイルを指定できる。
+ ```json
+ "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js",
+    "start": "webpack-dev-server --config webpack.dev.js"
+  },
+ ```
