@@ -218,6 +218,9 @@ advancedFnc(0,'hoge',true,3,5,6,7)
 
 ## constアサーション
 型注釈無しで型に対して具体的なカプセル化を施せるキーワード
+- readonlyを付与
+- 型推論が通常のプリミティブ型でなくリテラル型になる
+
 ```typescript
 const milk = 'milk' as const;
 let drink = milk;
