@@ -258,6 +258,10 @@ advancedFnc(0,'hoge',true,3,5,6,7)
 
 ## constアサーション
 型注釈無しで型に対して具体的なカプセル化を施せるキーワード
+- readonlyを付与
+- 型推論が通常のプリミティブ型でなくリテラル型になる
+
+例１
 ```typescript
 const milk = 'milk' as const;
 let drink = milk;
@@ -278,4 +282,12 @@ const peter = {
 ```
 ---
 
+例２
+```typescript
+const tables = ['users', 'posts', 'comments']
+// tablesの型　→ string[] 
+
+const tables2 = ['users', 'posts', 'comments'] as const;
+// tables2の型 → readonly ["users","posts","comments"]
+```
 
