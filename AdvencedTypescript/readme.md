@@ -24,6 +24,13 @@ const tom: EngineerBlogger = {
   follower: 300
 }
 ```
+インターセクション型を用いてinterfaceを結合する時、
+同じプロパティ名で異なる型がそれぞれに存在する場合は
+合体させたあとはnever型になる。
+
+union型でinterfaceを結合する場合の同様の場合は
+その異なる名前のプロパティはnever型でなくunion型になる
+
 ---
 
 ## TypeGuard
@@ -94,6 +101,39 @@ function test(pet: Pet) {
   switch(pet.kind) { 
     case: 'Dog'  
     case: 'Bird'
+  }
+}
+```
+
+以下の応用は値があるかもしれないし無いかもしれないことを表すoptionの型を
+タグ付きUnionで表現。
+タグ付きUnionを絞り込む方法としてはswitchを使うのが
+拡張性に長けていてより適切。
+
+```ts
+// タグ付きUnion応用
+interface Some<T> {
+  type: 'Some',
+  value: T;
+}
+
+interface None {
+  type: 'None'
+}
+
+type Option<T> = Some<T> | None;
+
+function map<T, U>(obj: Option<T>, f: (obj: T) => U): Option<U> {
+  switch (obj.type) {
+    case 'Some':
+      return {
+        type: 'Some',
+        value: f(obj.value)
+      }
+    case 'None':
+      return {
+        type: 'None'
+      }
   }
 }
 ```

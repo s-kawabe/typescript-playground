@@ -117,3 +117,4 @@ type DistributiveConditionalType = 'tomato' | 'pumpkin' extends
 type DistributiveConditionalType2<T> = T extends
                                    'tomato' ? number : boolean;
 let dct: DistributiveConditionalType2<'tomato' | 'pumpkin'>
+
