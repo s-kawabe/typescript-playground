@@ -290,4 +290,29 @@ const tables = ['users', 'posts', 'comments']
 const tables2 = ['users', 'posts', 'comments'] as const;
 // tables2の型 → readonly ["users","posts","comments"]
 ```
+---
 
+## inferキーワード
+inferは日本語に表すと「推論」。
+
+TypeScriptのextendsを使うと、型での条件分岐が可能になるが、(T extends U ? P : K)
+inferはその条件分岐で推論された型を指すときに用いることができる。
+inferは引数によって動的に値が変化する変数のようなもの
+
+**infer U**は列挙されているものを取り出すことができる
+```ts
+// TypeScriptドキュメントより抜粋
+
+type Unpacked<T> = T extends (infer U)[]
+  ? U
+  : T extends (...args: any[]) => infer U
+  ? U
+  : T extends Promise<infer U>
+  ? U
+  : T;
+```
+
+上記は配列、関数、Promiseの中の型を取り出す型。
+string[] なら string
+(arg: string) => boolean なら boolean
+Promise<string> なら string
