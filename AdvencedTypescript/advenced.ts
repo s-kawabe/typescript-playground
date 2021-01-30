@@ -19,6 +19,22 @@ const tom: EngineerBlogger = {
   follower: 300
 }
 
+type asdds = EngineerBlogger['follower']
+
+
+interface Engineer2 {
+  name: string;
+  role: string;
+}
+
+interface Blogger22 {
+  name: string;
+  follower: number;
+}
+
+type EngineerBlogger2 = Engineer2 & Blogger22;
+
+type gasg = keyof EngineerBlogger2
 
 // TypeGuard---------------------------------------
 // typeof - 何の型なのか調べる(標準の7つの型のうちどれか)
