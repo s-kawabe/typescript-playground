@@ -247,6 +247,10 @@ type id = DownloadedData['id']
 ---
 
 ## REST ParameterにTupleを使用する
+タプル型には最後らへんの配列をまとめるレストパラメータとして型を指定できる。
+新しいTypeScriptではこれが後ろじゃなくてもよくなった。
+最後がレストパラメータ、かつその前にOptionalがある場合は
+その前のOptionalがない場合にレストの値を指定することはできない
 ```typescript
 function advancedFnc(...args: [number, string, boolean, ...number[]]) {
 
@@ -316,3 +320,137 @@ type Unpacked<T> = T extends (infer U)[]
 string[] なら string
 (arg: string) => boolean なら boolean
 Promise<string> なら string
+
+---
+
+## isとin演算子
+**参考**<br>
+(isとinを理解する)[https://qiita.com/ryo2132/items/ce9e13899e45dcfaff9b]<br>
+
+### is
+unknown、any、Union型などの型の絞り込みを行う。**(type predicate)**
+ユーザー定義型ガード呼ばれる実装などで使われます。
+
+#### isが生まれる背景
+型ガードでいちいち`if(typeof == 型)`と書くのが煩わしいので型チェック専用の関数に切り出したいとする
+```ts
+const isString = (test: unknown): boolean => {
+  return typeof test === "string";
+};
+
+const example = (foo: unknown) => {
+  if (isString(foo)) {
+    console.log(foo.length); // Error fooはまだunknownとして推論される
+  }
+};
+```
+しかし、この実装例だとうまく行かない。
+型の情報は関数スコープで完結してしまう為、example関数のfooは`isString`関数を
+噛ませた後でも`unknown`となってしまう。
+
+#### このように使う
+
+```ts
+const isString = (test: unknown): test is string => {
+  return typeof test === "string";
+};
+
+const example = (foo: unknown) => {
+  if (isString(foo)) {
+    console.log(foo.length); // fooはstringとして推論される
+  }
+};
+```
+
+isStringは真偽値を返し、trueを返すならば引数が指定した型であることを示す。
+つまり、「戻り値がtrueの場合には引数の`test`はstring型である。」
+とコンパイラーに教えることができる。
+
+
+#### 注意点
+isに関しての型チェックは実質ほとんど効いていない。
+isStringを以下のようにしても、型チェックが通ってしまい、バグの元になるので注意。
+```ts
+function isString(x: unknown): x is string {
+  return typeof x === "number";
+}
+```
+
+### in
+
+あるメンバーがクラスやオブジェクトに属しているかを調べる
+
+```ts
+type Engineer = {
+  name: string;
+  role: string;
+}
+
+type Designer = {
+  name: string;
+  tool: string;
+}
+
+type Job = Engineer | Designer
+
+function checkJobs(job: Job) {
+  // ここでjobはnameのみアクセス可
+  if('role' in job) {
+    // ここでjobはroleにもアクセス可
+  }
+  if('tool' in Job) {
+    // ここでjobはtoolにもアクセス可
+  }
+}
+```
+
+---
+
+## ユーザ定義型ガード
+(ユーザ定義型ガード)[https://blog.uhy.ooo/entry/2021-04-09/typescript-is-any-as/]
+を使用する場合、引数をunknownにして中でasを使う手法がより型安全とされている
+上手にやればasを消すことも可能
+
+### ユーザ定義型ガードとは
+型ガード(Type guard, Type narrowing)に使用できる関数の一種。
+ユーザ定義型ガードの戻り値の型はtype predicateを使う。
+このような関数は真偽値を返り値として返し、trueを返すならば引数名が型であることを表す。
+
+また、この関数の戻り値に指定している型を**型述語**と呼ぶが
+isの説明でも書いてある通り、型述語は完全に書いた人の自己申告になるので
+以下のような例はコンパイルエラーにならず、通ってしまう。
+
+```
+function isStringOrNumber(value: unknown): value is string | number {
+  // 型述語と食い違う実装！
+  return value === null;
+}
+```
+
+<br>
+ユーザ定義型ガードの使い道として典型的な例は、**APIの型定義**である。
+このような外界から来たデータはほとんどの場合unknownとなるので
+ユーザ側で型を明確にしてあげる必要がある。
+
+### つくりかた
+
+```ts
+type ImportantData = {
+  hello: string;
+  hoge: number;
+};
+
+function isNotNullish(data: unknown): data is Record<string, unknown> {
+  return data != null;
+}
+
+function isImportantData(data: unknown): data is ImportantData {
+  if (!isNotNullish(data)) {
+    return false;
+  }
+  return typeof data.hello === "string" && typeof data.hoge === "number";
+}
+```
+
+このようにするとanyもasも使わない実装になる。
+

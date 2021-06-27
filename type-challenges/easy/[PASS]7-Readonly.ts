@@ -15,6 +15,7 @@ todo2.title = "Hello" // Error: cannot reassign a readonly property
 todo2.description = "barFoo" // Error: cannot reassign a readonly property
 
 // my answer
+// readonlyキーワードを付与する
 type MyReadonly<T> = {
   readonly [K in keyof T]: T[K]
 } 

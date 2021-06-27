@@ -18,3 +18,6 @@ type result = TupleToObject<typeof tuple> // expected { tesla: 'tesla', 'model 3
 type TupleToObject<T extends readonly string[]> = {
   [P in T[number]]: P
 }
+
+// MappedTypesにおいてinの右側は列挙可能な物でなければいけない
+// → 配列型[number]とすると「keyof オブジェクト名」のように列挙可能な型としてコンパイラーに示せる？
