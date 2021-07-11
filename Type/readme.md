@@ -17,6 +17,17 @@ let pi: number = 3.14;
 let nega: number = -50;
 ```
 ---
+## bigint
+ES2020で新しく追加されている型。
+number型が表すことのできる型は2の53乗までだが、bigintは更に大きい整数を表すことができる
+末尾にnをつけることでbigint型であることを表している。
+また、bigintのリテラルは整数でなければいけない(88.5n などはNG)
+nがついているものの、実際はその値と変わらない(100n + 100n = 200n)
+```ts
+let a = 1234n    // bigint
+const b = 5678n  // 5678n
+```
+---
 ## string
 ```typescript
 let single: string = 'hoge';
@@ -34,11 +45,21 @@ let single<strong>: string</strong> = 'hoge'
 let hasValue = true;
 → コレは多分booleanだ！
 
-### 結論
+### どっちを使えばいいか
 - 基本的には型推論、それ以外の初期化しない場合などに型注釈を用いる
 - anyについては型注釈を用いる
 ---
 ## オブジェクトに型をつける
+
+TypeScriptではシンプルなオブジェクトと複雑なオブジェクトの違いを区別することはできない。
+これは**構造的型付け**という思想によるもの。
+反対は**名前的型付け**。
+オブジェクトの名前ではなく中身によって等価性を判断する。
+`object型`というのはanyより少し厳しくはなっているものの
+実際これでアノテーションすることはほとんどない。
+
+そこで下記は`オブジェクトリテラル記法`という
+
 型注釈
 ```typescript
 const person: {
@@ -112,6 +133,20 @@ var CoffeSize;
 
 ## unknown
 anyと似ているが、anyより微妙に厳しくなっている
+
+前もって本当に型がわからない値がある場合にはanyの代わりにunknownを使用する。
+値に入れる際はanyと同じ挙動をするが、それが何であるかをチェックすることで
+それを絞り込まなければTypeScriptはunknwon型の値の使用を許可しない。
+
+```ts
+let a: unknown = 30 // 格納する際は何でもOK
+let b = a === 123
+let c = a + 10  // この時点でaはnumber型を認識できていない
+if(typeof a === 'number') { // 型ガードをしなければいけない
+  let d = a + 10
+}
+```
+
 ```typescript
 let unknownInput: unknown = 20;
 let anyInput: input = "hello";
@@ -122,6 +157,15 @@ text = unknownInput; // NG
 if(typeof(unknownInput) === 'string') {
   text = unknownInput;
 }
+```
+
+union型の中にanyやunknownが含まれている際の動き
+
+```ts
+// unionの中にunknownが1つでもあればunknown型になる
+type CheckUnknown = unknown | number | string
+// unionの中にanyが1つでもあればany型になる
+type CheckAny = any | number | string
 ```
 
 ---
@@ -246,3 +290,8 @@ function error(message: string): never {
 console.log(error('this is an error'));
 ```
 
+## nullとundifinedとvoidとnever
+null: 値の欠如
+undefined: 値がまだ割り当てられていない変数
+void: return文を持たない関数の戻り値
+never: 決して戻ることのない関数の戻り値
