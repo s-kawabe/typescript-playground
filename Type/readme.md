@@ -253,6 +253,17 @@ const anotherAdd: (n1: number, n2: number) => number  // ←これは戻り値
   };
 ```
 
+```ts
+// 呼び出しシグネチャの省略記法
+type Log = (message: string, userId?: string) => void
+
+// 完全な呼び出しシグネチャ
+type Reserve = {
+  (from: Date, to: Date, destination: string): Reservation
+  (from: Date, destination: string): Reservation
+}
+```
+
 ### アロー関数
 ```typescript
 const doubleNumber: (num: number) => num = num * 2;
