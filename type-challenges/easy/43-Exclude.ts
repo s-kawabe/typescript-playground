@@ -27,4 +27,8 @@ type BBB = 'title' | 'completed'
 
 type MyUnion = AAA | BBB
 type MyIntersection = AAA & BBB
+
+// => "title" | "completed" | "hoge"
 type MyExtends = AAA extends BBB ? never : AAA
+// => "title" | "completed"
+type Excluded = MyExclude<AAA, BBB>
