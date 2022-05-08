@@ -32,4 +32,32 @@ p.catch((err: unknown) => {
 // 👮‍♂️ Promise.allSettled「allとほぼ同じだが、いずれかの非同期処理が失敗した場合も全てのPromiseの結果が出るまで待つ」
 // 「また戻り値がこの形式になる [{ status: "fulfilled", value: 結果の値 }, { status: "rejected", reason: 結果の値 } ]」
 
+// p2: Promise<[PromiseSettledResult<string>, PromiseSettledResult<never>]>
+// interface PromiseFulfilledResult<T> {
+//   status: "fulfilled";
+//   value: T;
+// }
+// interface PromiseRejectedResult {
+//   status: "rejected";
+//   reason: any;
+// }
+// type PromiseSettledResult<T> = PromiseFulfilledResult<T> | PromiseRejectedResult;
+
+const p2 = Promise.allSettled([
+  readFile("foo.txt", "utf8"),
+  sleepReject(5000)
+])
+
+p2.then((result) => {
+  console.log(result)
+})
+
 // 👮‍♂️ Promise.any 「渡されたPromiseのいずれかが成功した時点でany()の戻り値も成功になる。(raceと違って失敗しても無視して続ける)」
+const p3 = Promise.any([
+  readFile("foo.txt", "utf8"),
+  sleepReject(5000)
+])
+
+p.then((result) => {
+  console.log("Success: ", result)
+})
