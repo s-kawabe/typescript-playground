@@ -15,11 +15,16 @@ const todo2: MyReadonly2<Todo, "title" | "description"> = {
   completed: false,
 };
 
-todo.title = "Hello"; // Error: cannot reassign a readonly property
-todo.description = "barFoo"; // Error: cannot reassign a readonly property
-todo.completed = true; // OK
+todo2.title = "Hello"; // Error: cannot reassign a readonly property
+todo2.description = "barFoo"; // Error: cannot reassign a readonly property
+todo2.completed = true; // OK
 
 
-type MyReadonly2<T extends Object, K extends any> = K extends keyof T 
-  ? /*Kだけreadonly*/ 
-  : /*全部readonly*/
+// type MyReadonly2<T extends Object, K extends any> = K extends keyof T 
+// ? /*Kだけreadonly*/ 
+// : /*全部readonly
+
+// Kを指定しなければKはkeyof Tとなる → ＆前後で返すものが同じになるはず
+type MyReadonly2<T, K extends keyof T = keyof T> = {
+  [P in keyof T as P extends K ? never : P]: T[P]
+} & { readonly [P in K]: T[P] }
